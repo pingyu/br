@@ -128,11 +128,13 @@ func RunRestoreRaw(c context.Context, g glue.Glue, cmdName string, cfg *RestoreR
 		!cfg.LogProgress)
 
 	// RawKV restore does not need to rewrite keys.
-	rewrite := &restore.RewriteRules{}
-	err = restore.SplitRanges(ctx, client, ranges, rewrite, updateCh)
-	if err != nil {
-		return errors.Trace(err)
-	}
+	// rewrite := &restore.RewriteRules{}
+
+	// NOTE: TiKV 5.0 do not support split ranges for RawKV keys.
+	// err = restore.SplitRanges(ctx, client, ranges, rewrite, updateCh)
+	// if err != nil {
+	// 	return errors.Trace(err)
+	// }
 
 	restoreSchedulers, err := restorePreWork(ctx, client, mgr)
 	if err != nil {

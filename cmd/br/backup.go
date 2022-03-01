@@ -51,6 +51,12 @@ func runBackupRawCommand(command *cobra.Command, cmdName string) error {
 		return errors.Trace(err)
 	}
 
+	// Fail to backup on [nil, nil]. Work around by set StartKey to [0x00,].
+	// TODO: fix it.
+	if len(cfg.StartKey) == 0 && len(cfg.EndKey) == 0 {
+		cfg.StartKey = []byte{0x00}
+	}
+
 	ctx := GetDefaultContext()
 	if cfg.EnableOpenTracing {
 		var store *appdash.MemoryStore
